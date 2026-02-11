@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Índice de Cursos - Unicesumar</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(135deg,#0b2d5c,#0f4aa1);
+    font-family: Arial, Helvetica, sans-serif;
+    animation: entradaSite 0.8s ease;
+}
+
+@keyframes entradaSite{
+    from{ opacity:0; transform: scale(0.95); }
+    to{ opacity:1; transform: scale(1); }
+}
+
+.container{
+    text-align:center;
+    background: rgba(255,255,255,0.08);
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 0 25px rgba(0,0,0,0.4);
+    width:90%;
+    max-width:500px;
+}
+
+.logo{
+    width:160px;
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:18px;
+    font-size:20px;
+    border:none;
+    border-radius:12px;
+    outline:none;
+    text-align:center;
+}
+
+#resultado{
+    margin-top:25px;
+    font-size:26px;
+    color:#ffffff;
+    min-height:35px;
+}
+
+.credito{
+    position: fixed;
+    bottom: 6px;
+    right: 10px;
+    font-size: 9px;
+    opacity: 0.25;
+    color: #ffffff;
+    pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <img src="tata.png" class="logo">
+    <input type="text" id="busca" placeholder="Digite o código do curso...">
+    <div id="resultado"></div>
+</div>
+
+<div class="credito">Desenvolvido por Fabricio Benigno</div>
+
+<script>
+/* ===== BASE DE CURSOS EPRO ===== */
+const cursos = {
+"EPRO_PREDE":"Administração de Redes e Segurança da Informação",
+"EPRO_PALP":"Algoritmo e Lógica da Programação",
+"EPRO_PASSEX":"Assessoria Executiva",
+"EPRO_ACQ":"Assistente de Controle de Qualidade",
+"EPRO_AFAR":"Atendente de Farmácia",
+"EPRO_PADM":"Auxiliar Administrativo",
+"EPRO_PACFIN":"Auxiliar de Análise Contábil e Gestão Financeira",
+"EPRO_PCONT":"Auxiliar de Contabilidade",
+"EPRO_PEDIG":"Auxiliar de Educação Digital",
+"EPRO_AGE":"Auxiliar de Gestão Escolar",
+"EPRO_AGEE":"Auxiliar de Gestão Estratégica de Empresas",
+"EPRO_PMKT":"Auxiliar de Marketing",
+"EPRO_PFCREC":"Auxiliar de Planejamento Financeiro, Crédito e Cobrança",
+"EPRO_APPI":"Auxiliar de Práticas Pedagógicas Inovadoras",
+"EPRO_PARH":"Auxiliar de Recursos Humanos",
+"EPRO_PATEL":"Auxiliar de Telemarketing",
+"EPRO_AGR":"Auxiliar em Agronegócio",
+"EPRO_AGQ":"Auxiliar em Gerenciamento da Qualidade e Meio Ambiente",
+"EPRO_AGI":"Auxiliar em Gerenciamento Imobiliário",
+"EPRO_AGAS":"Auxiliar em Gestão de Negócios Gastronômicos",
+"EPRO_PAGTI":"Auxiliar em Gestão de TI",
+"EPRO_AEL":"Auxiliar em Logística",
+"EPRO_PTDP":"Auxiliar em Treinamento e Desenvolvimento de Pessoas",
+"EPRO_AJUR":"Auxiliar Jurídico",
+"EPRO_PCPE":"Capacitação de Pessoas",
+"EPRO_PSAUDE":"Capacitação de Profissionais da Saúde",
+"EPRO_CLIMA":"Clima e Governança Organizacional",
+"EPRO_PCDP":"Coaching e Desenvolvimento de Pessoas",
+"EPRO_COMEX":"Comércio Exterior",
+"EPRO_PCON":"Confeitaria",
+"EPRO_PCOP":"Consultoria Política",
+"EPRO_CAMB":"Controle Ambiental",
+"EPRO_DMOB":"Desenvolvedor Mobile",
+"EPRO_PDPP":"Desenvolvimento de Pessoas: Uma Visão Pedagógica",
+"EPRO_DPEC":"Desenvolvimento Profissional e Estratégias de Carreira",
+"EPRO_EDUCO":"Educação Corporativa",
+"EPRO_PEMP":"Empreendedorismo",
+"EPRO_PFFP":"Fechamento de Folha de Pagamento",
+"EPRO_PFIN":"Finanças Empresariais",
+"EPRO_GAME":"Game Design",
+"EPRO_PGAS":"Gastronomia",
+"EPRO_PGMA":"Gerenciamento do Meio Ambiente",
+"EPRO_PGOE":"Gerenciamento Organizacional Estratégico",
+"EPRO_PGIC":"Gestão da Informação e do Conhecimento em Organizações",
+"EPRO_GPROD":"Gestão da Produção",
+"EPRO_PGQA":"Gestão da Qualidade e Ambiental",
+"EPRO_COOP":"Gestão de Cooperativas",
+"EPRO_GERA":"Gestão de Empresas Rurais e Agroindustriais",
+"EPRO_GNEF":"Gestão de Negócios com Ênfase em Finanças e Custos",
+"EPRO_GNPM":"Gestão de Negócios com Ênfase em Pessoas e Marketing",
+"EPRO_AGV":"Gestão de Vendas",
+"EPRO_PGMD":"Gestão em Marketing Digital",
+"EPRO_GEMP":"Gestão Empresarial",
+"EPRO_PGIM":"Gestão Imobiliária",
+"EPRO_INFNET":"Informática para Internet",
+"EPRO_PITI":"Infraestrutura em TI",
+"EPRO_PIPD":"Inovações na Prática Docente",
+"EPRO_PLOTRA":"Logística de Transporte de Mercadorias",
+"EPRO_PLPP":"Logística nos Processos Produtivos",
+"EPRO_PLOE":"Logística Organizacional Estratégica",
+"EPRO_PMKTTC":"Marketing Digital e Tendências de Consumo",
+"EPRO_MATD":"Matemática e suas Aplicações no Tratamento de Dados",
+"EPRO_PMFI":"Mercado Financeiro",
+"EPRO_PMID":"Mídias Digitais",
+"EPRO_MUGE":"Multifunções do Gestor Escolar",
+"EPRO_NBDS":"Noções Básicas de Desenvolvimento de Sistemas",
+"EPRO_NDIR":"Noções de Direito",
+"EPRO_NACO":"Novas Abordagens de Gestão de Conflitos",
+"EPRO_PPOF":"Pacote Office",
+"EPRO_PPCP":"Planejamento e Controle de Produção (PCP)",
+"EPRO_PRFE":"Planejamento e Fontes de Recursos de Empreendimentos Sociais",
+"EPRO_PPAA":"Políticas Públicas e o Acesso à Saúde",
+"EPRO_PEAD":"Práticas Fundamentais de Tecnologias em EaD",
+"EPRO_PSLR":"Práticas Sociais de Líderes em Instituições Religiosas",
+"EPRO_PBFC":"Princípios Básicos para a Formação da Criança",
+"EPRO_PRESA":"Responsabilidade Social e Ambiental",
+"EPRO_PSE":"Secretariado Executivo",
+"EPRO_SEDIG":"Segurança Digital",
+"EPRO_PSGU":"Storytelling e Games com Unity",
+"EPRO_PTEL":"Telecomunicações",
+"EPRO_PTG":"Tendências Gastronômicas"
+};
+
+/* ===== BUSCA EXATA APÓS "_" ===== */
+const input = document.getElementById("busca");
+const resultado = document.getElementById("resultado");
+
+input.addEventListener("input", function(){
+    const valor = this.value.toUpperCase().trim();
+    resultado.textContent = "";
+    if(valor === "") return;
+
+    for(const codigo in cursos){
+        if(codigo.split("_")[1] === valor){
+            resultado.textContent = cursos[codigo];
+            return;
+        }
+    }
+});
+</script>
+
+</body>
+</html>
