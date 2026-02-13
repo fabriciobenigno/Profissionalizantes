@@ -5,6 +5,8 @@
 <title>Índice de Cursos - Unicesumar</title>
 
 <style>
+
+/* ===== ANIMAÇÃO DE ENTRADA ===== */
 body{
     margin:0;
     height:100vh;
@@ -17,10 +19,11 @@ body{
 }
 
 @keyframes entradaSite{
-    from{ opacity:0; transform: scale(0.95); }
-    to{ opacity:1; transform: scale(1); }
+    from{opacity:0; transform:scale(0.95);}
+    to{opacity:1; transform:scale(1);}
 }
 
+/* ===== CONTAINER ===== */
 .container{
     text-align:center;
     background: rgba(255,255,255,0.08);
@@ -31,11 +34,13 @@ body{
     max-width:500px;
 }
 
+/* ===== LOGO ===== */
 .logo{
     width:160px;
     margin-bottom:20px;
 }
 
+/* ===== INPUT ===== */
 input{
     width:100%;
     padding:18px;
@@ -44,15 +49,19 @@ input{
     border-radius:12px;
     outline:none;
     text-align:center;
+    text-transform:uppercase;
 }
 
+/* ===== RESULTADO ===== */
 #resultado{
     margin-top:25px;
-    font-size:26px;
+    font-size:24px;
     color:#ffffff;
     min-height:35px;
+    font-weight:bold;
 }
 
+/* ===== CRÉDITO ===== */
 .credito{
     position: fixed;
     bottom: 6px;
@@ -62,6 +71,7 @@ input{
     color: #ffffff;
     pointer-events: none;
 }
+
 </style>
 </head>
 
@@ -69,16 +79,26 @@ input{
 
 <div class="container">
     <img src="tata.png" class="logo">
-    <input type="text" id="busca" placeholder="Digite o código do curso...">
+    <input type="text" id="busca" placeholder="Digite o código COMPLETO do curso">
     <div id="resultado"></div>
 </div>
 
 <div class="credito">Desenvolvido por Fabricio Benigno</div>
 
 <script>
-/* ===== BASE DE CURSOS EPRO ===== */
-const cursos = {
-"EPRO_PREDE":"Administração de Redes e Segurança da Informação",
+
+/* ===================================================
+   ===== ÁREA PARA VOCÊ ADICIONAR TODOS OS CURSOS =====
+
+   Sempre seguir este padrão:
+
+   "CODIGO_EXATO":"Nome do Curso",
+
+   ⚠️ Não esquecer vírgula no final
+   ⚠️ O último item NÃO pode ter vírgula
+=================================================== */
+
+const cursos = {"EPRO_PREDE":"Administração de Redes e Segurança da Informação",
 "EPRO_PALP":"Algoritmo e Lógica da Programação",
 "EPRO_PASSEX":"Assessoria Executiva",
 "EPRO_ACQ":"Assistente de Controle de Qualidade",
@@ -158,27 +178,30 @@ const cursos = {
 "EPRO_SEDIG":"Segurança Digital",
 "EPRO_PSGU":"Storytelling e Games com Unity",
 "EPRO_PTEL":"Telecomunicações",
-"EPRO_PTG":"Tendências Gastronômicas"
-};
+"EPRO_PTG":"Tendências Gastronômicas"};
 
-/* ===== BUSCA EXATA APÓS "_" ===== */
+
+
+/* ===== BUSCA SOMENTE POR CÓDIGO COMPLETO ===== */
+
 const input = document.getElementById("busca");
 const resultado = document.getElementById("resultado");
 
-input.addEventListener("input", function(){
-    const valor = this.value.toUpperCase().trim();
-    resultado.textContent = "";
-    if(valor === "") return;
+input.addEventListener("input", function () {
 
-    for(const codigo in cursos){
-        if(codigo.split("_")[1] === valor){
-            resultado.textContent = cursos[codigo];
-            return;
-        }
+    const valor = this.value.trim().toUpperCase();
+    resultado.textContent = "";
+
+    if (valor === "") return;
+
+    // 🔒 Só retorna se o código for exatamente igual
+    if (cursos.hasOwnProperty(valor)) {
+        resultado.textContent = cursos[valor];
     }
+
 });
+
 </script>
 
 </body>
 </html>
-
